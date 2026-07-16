@@ -11,12 +11,28 @@ Lawyers, accountants, clinics and consultants can't paste confidential files int
 
 It is not a demo or a notebook. It is a complete, hardened application: a full ingestion pipeline, a dual (semantic + keyword) search index, hallucination-resistant retrieval, a local LLM with mandatory citations, an interactive 3D document graph, an OCR path, hardware-adaptive configuration, and an integration server that lets other AI agents query the archive as a tool.
 
-<div align="center">
-  <img src="assets/01-chat.png" alt="Chat with cited answers" width="49%" />
-  <img src="assets/02-graph.png" alt="Interactive 3D document graph" width="49%" />
-  <img src="assets/03-archive.png" alt="Document archive" width="49%" />
-  <img src="assets/04-privacy.png" alt="Privacy-first controls" width="49%" />
-</div>
+<table align="center">
+  <tr>
+    <td width="50%" valign="top">
+      <img src="assets/01-chat.png" alt="Chat with cited answers" /><br/>
+      <sub><b>Chat with cited answers.</b> Questions are answered from the user's documents, and every answer lists the source file it came from. <em>(The UI is in Italian; the header tagline reads "The system that respects your privacy".)</em></sub>
+    </td>
+    <td width="50%" valign="top">
+      <img src="assets/02-graph.png" alt="Interactive 3D document graph" /><br/>
+      <sub><b>Interactive 3D document graph.</b> Nodes are documents, links are semantic similarity; the sidebar is a searchable file explorer. <em>("Grafo dei documenti" = "Documents graph"; "Vista grafo" = "Graph view".)</em></sub>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <img src="assets/03-archive.png" alt="Document archive" /><br/>
+      <sub><b>Document archive.</b> Every indexed file with its folder, number of text chunks, and indexing date. <em>("Archivio documenti" = "Document archive"; "Cartella" = "Folder"; "Indicizzato" = "Indexed".)</em></sub>
+    </td>
+    <td width="50%" valign="top">
+      <img src="assets/04-privacy.png" alt="Privacy-first controls" /><br/>
+      <sub><b>Privacy-first controls.</b> Before optional web search can be enabled, a warning explains that questions would be sent to an external server and advises against it for sensitive data. <em>("Ricerca internet e privacy" = "Internet search and privacy"; "Ho capito" = "Got it".)</em></sub>
+    </td>
+  </tr>
+</table>
 
 ## At a glance
 
