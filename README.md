@@ -77,5 +77,5 @@ This repository is a demonstrative showcase. The source code and internal implem
 ## Contact
 
 **Name:** Lorenzo Boschi
-**LinkedIn:** [your-linkedin-url](https://www.linkedin.com/in/your-profile)
-**Email:** [lolloboss5@gmail.com](mailto:lolloboss5@gmail.com)
+**LinkedIn:** [linkedin.com/in/lorenzo-boschi](https://www.linkedin.com/in/lorenzo-boschi-842bb22a8/)
+**Email:** [lorenzoboschi27@gmail.com](mailto:lorenzoboschi27@gmail.com)
