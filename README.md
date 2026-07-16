@@ -115,6 +115,6 @@ This repository is a demonstrative showcase. Apart from the excerpt in `code-sam
 
 ## Contact
 
-**Name:** Lorenzo Boschi
-**LinkedIn:** [linkedin.com/in/lorenzo-boschi](https://www.linkedin.com/in/lorenzo-boschi-842bb22a8/)
+**Name:** Lorenzo Boschi<br>
+**LinkedIn:** [linkedin.com/in/lorenzo-boschi](https://www.linkedin.com/in/lorenzo-boschi-842bb22a8/)<br>
 **Email:** [lorenzoboschi27@gmail.com](mailto:lorenzoboschi27@gmail.com)
