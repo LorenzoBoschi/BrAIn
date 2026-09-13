@@ -1,136 +1,93 @@
 <div align="center">
-  <img src="assets/logo.png" alt="BrAIn" width="140" />
+  <img src="assets/logo.png" alt="BrAIn logo" width="120" />
   <h1>BrAIn</h1>
-  <p><strong>A fully local, private RAG assistant that answers questions about your own documents — with nothing ever leaving your machine.</strong></p>
-  <p><em>An end-to-end product: document ingestion, hybrid search, a local language model, a web UI, and a 3D knowledge graph — running entirely offline on ordinary hardware.</em></p>
+  <p><strong>Local AI for your documents</strong></p>
+  <p>Find information, ask questions with source citations and explore answers on a visual workspace.</p>
 </div>
 
----
+**Public project showcase · Application source code is private**
 
-Lawyers, accountants, clinics and consultants can't paste confidential files into cloud AI tools without breaking client confidentiality or data-protection law. **BrAIn** removes that trade-off: it runs entirely on the user's own computer, indexes their documents, and answers natural-language questions about them **with verifiable source citations** — no cloud, no external APIs, no data leaving the device.
+I built BrAIn to make a document archive easier to use: find the relevant file, read the passage behind an answer and continue from there. It combines local language models with semantic and keyword search, a browser interface and an MCP integration.
 
-It is not a demo or a notebook. It is a complete, hardened application: a full ingestion pipeline, a dual (semantic + keyword) search index, hallucination-resistant retrieval, a local LLM with mandatory citations, an interactive 3D document graph, an OCR path, hardware-adaptive configuration, and an integration server that lets other AI agents query the archive as a tool.
+BrAIn can run offline once the required models are installed. Optional web search and MCP connections are described in the privacy section below.
 
-<table align="center">
-  <tr>
-    <td width="50%" valign="top">
-      <img src="assets/01-chat.png" alt="Chat with cited answers" /><br/>
-      <sub><b>Chat with cited answers.</b> Questions are answered from the user's documents, and every answer lists the source file it came from. <em>(The UI is in Italian; the header tagline reads "The system that respects your privacy".)</em></sub>
-    </td>
-    <td width="50%" valign="top">
-      <img src="assets/02-graph.png" alt="Interactive 3D document graph" /><br/>
-      <sub><b>Interactive 3D document graph.</b> Nodes are documents, links are semantic similarity; the sidebar is a searchable file explorer. <em>("Grafo dei documenti" = "Documents graph"; "Vista grafo" = "Graph view".)</em></sub>
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top">
-      <img src="assets/03-archive.png" alt="Document archive" /><br/>
-      <sub><b>Document archive.</b> Every indexed file with its folder, number of text chunks, and indexing date. <em>("Archivio documenti" = "Document archive"; "Cartella" = "Folder"; "Indicizzato" = "Indexed".)</em></sub>
-    </td>
-    <td width="50%" valign="top">
-      <img src="assets/04-privacy.png" alt="Privacy-first controls" /><br/>
-      <sub><b>Privacy-first controls.</b> Before optional web search can be enabled, a warning explains that questions would be sent to an external server and advises against it for sensitive data. <em>("Ricerca internet e privacy" = "Internet search and privacy"; "Ho capito" = "Got it".)</em></sub>
-    </td>
-  </tr>
-</table>
+## A look inside
 
-## At a glance
+These screenshots use fictional demonstration documents. The interface is in Italian.
 
-- **100% local and private** — fully offline after the initial model download; nothing leaves the machine.
-- **6 document formats** — PDF, DOCX, Markdown, TXT, EML, and images (via OCR).
-- **Dual search index** — dense vectors *and* keyword (BM25), fused together.
-- **Hardware-adaptive** — scales itself from a 1.5B model on a small laptop to a 14B model on a workstation, automatically.
-- **Hardened** — a suite of 93 automated tests, and a full pass through an adversarial multi-agent code review.
-- **Battle-tested** — validated on a real ~300-document corpus on a separate machine.
-- **Zero graphics libraries** — the real-time 3D graph is a hand-written canvas renderer.
+### Find documents and check the sources
 
-## Architecture
+![BrAIn chat listing demonstration documents about automation with source cards](assets/01-chat.png)
+
+Ask a question or find documents on a topic. This example returns a document list directly, with references and source cards. Other questions use a local model to generate an answer from retrieved passages.
+
+### Explore the document map
+
+![BrAIn two-dimensional document map with a searchable file list](assets/02-map.png)
+
+The **2D document map** supports search across file names, folders and indexed content. Explore related documents and open the originals. Connections indicate similarity between documents.
+
+### Work through branches on the canvas
+
+![BrAIn canvas with connected questions and answers](assets/03-canvas.png)
+
+The canvas, called **Tela** in the interface, lets you continue from a particular answer, explore alternatives and combine selected branches into a synthesis. You can also compare responses from installed local models side by side. This example follows two document-search requests on one branch.
+
+### Clarify before looking for a procedure
+
+![BrAIn asking whether a firewall port means a TCP or UDP port or a physical network interface](assets/04-clarification.png)
+
+For an ambiguous request such as “open a firewall port,” BrAIn asks whether you mean a TCP/UDP port or a physical interface, and which firewall you are using. This specific clarification keeps the follow-up connected to the original question.
+
+## What it does
+
+- **Document search and questions:** combines semantic retrieval with keyword search for both natural-language questions and exact terms.
+- **Local generation:** uses Ollama for answers from local models, with streaming output.
+- **Source access:** shows citations and document cards alongside the answer. Opening the originals on Windows requires an associated application for the file format.
+- **Document ingestion:** handles PDF, DOCX, Markdown, text and EML files, with OCR for scanned content and images.
+- **Multiple ways to answer:** some supported requests return document listings or source extracts directly, without free-form model generation.
+- **MCP integration:** makes the archive available to a connected AI client through search and question-answering tools.
+
+## Privacy and data flows
+
+| Mode | Where information goes |
+|---|---|
+| **Local operation** | Document processing, search and answer generation run on the computer. The necessary models must be available locally. |
+| **Optional web search** | Queries are sent to an external search service when this option is enabled. |
+| **MCP connection** | Tool results, including retrieved passages or locally generated answers, are returned to the connected client. A cloud-backed client can send those contents outside the computer. |
+
+Files kept in a cloud-synced folder are still subject to that folder's sync settings.
+
+## How the parts fit together
 
 ```mermaid
 flowchart LR
-    Docs["Your documents<br/>PDF · DOCX · MD · TXT · EML · images"] --> Ingest["Ingestion pipeline"]
-    Ingest --> Index[("Search index<br/>vectors + keyword")]
-
-    User(["User"]) <--> UI["Local web app"]
-    UI <--> Core["Application core"]
-    Core -->|retrieve| Index
-    Core -->|generate| LLM["Local language model"]
-    LLM -->|answer + citations| UI
-
-    Agents(["External AI agents"]) <--> MCP["MCP interface"]
-    MCP <--> Core
-
-    classDef store fill:#1e2230,stroke:#7c6cf5,color:#e8eaf0;
-    classDef box fill:#171a23,stroke:#2a2f40,color:#e8eaf0;
-    class Docs,Ingest,UI,Core,LLM,MCP box;
-    class Index store;
+    Docs[Documents] --> Processing[Text extraction and OCR]
+    Processing --> Search[Semantic and keyword index]
+    UI[Chat and canvas] --> Retrieval[Document retrieval]
+    Retrieval --> Search
+    Retrieval --> Local[Local model via Ollama]
+    Local --> UI
+    Retrieval --> Sources[Source documents and extracts]
+    Sources --> UI
+    Client[Connected AI client] <--> MCP[MCP interface]
+    MCP <--> Retrieval
 ```
 
-*Everything inside the diagram runs on the user's machine. The MCP interface lets external AI agents query the archive, receiving only the passages relevant to a given question — never the whole corpus.*
+This is a high-level view of the document workflow. The connected client is outside the application's local processing boundary; optional web search is omitted from the diagram.
 
-## Engineering highlights
+**Main technologies:** Python, FastAPI, ChromaDB, SQLite FTS5, sentence-transformers, Ollama, JavaScript and MCP.
 
-The interesting problems weren't in wiring an LLM to a vector store — they were in making that pipeline *trustworthy and usable on real, modest hardware*.
+## Validation and limits
 
-- **Hallucination-resistant retrieval.** Small local models will confidently answer from irrelevant context. A contrast-based relevance gate decides when the system should say *"I found nothing relevant"* and skip the model entirely — instead of inventing an answer. (See the [code sample](code-sample/hybrid_retrieval.py) below.)
-- **Hybrid semantic + keyword search.** Dense embeddings understand paraphrases but dilute rare exact terms (names, codes, invoice numbers); keyword search does the opposite. The two are fused with Reciprocal Rank Fusion so both are covered.
-- **Reliable answers from small models.** Careful retrieval, mandatory citations (file + page), and query-intent routing (some questions are answered directly by the search engine, never touching the LLM) keep quality high on models that would otherwise wander.
-- **Memory kept under control.** Streaming ingestion, lazy model loading, batched embeddings and on-disk indexes let a full RAG stack run on everyday laptops without exhausting RAM.
-- **Hardware-adaptive by design.** The same build detects the machine it runs on and picks models, batch sizes and features accordingly — no manual tuning when moving to a different computer.
-- **Real-time 3D visualization from embeddings.** The document graph is a custom physics-and-perspective renderer drawn directly on a canvas, with depth cueing and orbit/zoom navigation — and no external graphics libraries.
-- **Robust and crash-safe.** Incremental hash-based indexing, an inter-process lock so two instances never corrupt the store, and data kept out of cloud-synced folders to avoid database corruption.
-- **Privacy by design.** By default no data can leave the device; any exception (an optional web search) is an explicit, clearly-warned user choice.
+The development record for **v0.6.13, dated 10 September 2026**, reports **1,241 passing automated tests**, covering retrieval regressions, citations, document handling, persistence and application behaviour. This is a historical result, not a new test run for the showcase. See the [validation note](VALIDATION.md) for scope and limitations.
 
-## Selected code
+Retrieval can miss relevant passages, OCR can lose information and local models can produce unsupported statements. A citation should be opened and checked. Performance depends on the model, hardware and documents. BrAIn remains a project under active development.
 
-A curated excerpt of the retrieval layer — the contrast-based relevance gate that keeps the system honest. Full file: [`code-sample/hybrid_retrieval.py`](code-sample/hybrid_retrieval.py).
+## About the project
 
-```python
-def passes_relevance_gate(best_similarity, candidate_similarities,
-                          min_similarity, has_lexical_anchor):
-    """Instead of a single hard threshold, the top hit is accepted only
-    if it is defensibly relevant: high in absolute terms, OR clearing the
-    threshold AND standing out from the median of the field (a real match
-    'peaks'; an off-topic query stays flat), OR backed by an exact lexical
-    anchor an off-topic query can never fabricate. Otherwise the system
-    returns 'no relevant results' and never calls the model."""
-    if has_lexical_anchor:
-        return True
-    mid = median(candidate_similarities) if candidate_similarities else 0.0
-    strong = best_similarity >= min_similarity + 0.06
-    peaked = (best_similarity >= min_similarity + 0.02
-              and best_similarity - mid >= 0.03)
-    return strong or peaked
-```
+I develop BrAIn with AI-assisted programming tools, including Claude Code and Codex. I define the requirements, guide implementation and test the results, using my understanding of the architecture to investigate problems and refine the application.
 
-## Design decisions
+This repository presents the application, selected design choices and demonstration images. The full source code, working document collections and internal configuration are private.
 
-- **Local models over the cloud** — the whole value proposition is confidentiality, so the entire stack is offline; the trade-off (smaller models, slower generation) is bought back with stronger retrieval and citations.
-- **A dual index instead of vectors alone** — semantic search alone silently misses exact identifiers; adding a keyword index and fusing the rankings fixes that class of failure.
-- **A relevance gate instead of always answering** — for confidential, professional use, a wrong-but-confident answer is worse than an honest "nothing found", so the system is built to refuse rather than guess.
-- **Adaptive configuration instead of a fixed profile** — the same build has to run on a 12 GB laptop and a 32 GB workstation, so hardware detection drives model and resource choices automatically.
-
-## Tech stack
-
-**Backend:** Python · FastAPI · Uvicorn
-**Retrieval & AI:** ChromaDB · SQLite FTS5 · sentence-transformers (multilingual-e5) · cross-encoder reranking · Ollama
-**Document processing:** PyMuPDF · python-docx · RapidOCR · Tesseract
-**Frontend:** vanilla JavaScript · HTML5 Canvas
-**Integration:** Model Context Protocol (MCP)
-
-## Built with rigor
-
-- **93 automated tests** across the core modules.
-- Hardened through an **adversarial multi-agent code review** that surfaced and fixed several real defects (including data-loss and concurrency bugs) before they could reach a user.
-- **Validated on a real ~300-document corpus** on a separate machine, then tuned from that feedback.
-- Developed **iteratively and versioned**, with a maintained changelog.
-
-## Note
-
-This repository is a demonstrative showcase. Apart from the excerpt in `code-sample/`, the source code and internal implementation details are private and available on request.
-
-## Contact
-
-**Name:** Lorenzo Boschi<br>
-**LinkedIn:** [linkedin.com/in/lorenzo-boschi](https://www.linkedin.com/in/lorenzo-boschi-842bb22a8/)<br>
-**Email:** [lorenzoboschi27@gmail.com](mailto:lorenzoboschi27@gmail.com)
+**Lorenzo Boschi** · [LinkedIn](https://www.linkedin.com/in/lorenzo-boschi-842bb22a8/) · [GitHub](https://github.com/LorenzoBoschi)
