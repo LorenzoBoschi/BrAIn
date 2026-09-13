@@ -60,21 +60,12 @@ Files kept in a cloud-synced folder are still subject to that folder's sync sett
 
 ## How the parts fit together
 
-```mermaid
-flowchart LR
-    Docs[Documents] --> Processing[Text extraction and OCR]
-    Processing --> Search[Semantic and keyword index]
-    UI[Chat and canvas] --> Retrieval[Document retrieval]
-    Retrieval --> Search
-    Retrieval --> Local[Local model via Ollama]
-    Local --> UI
-    Retrieval --> Sources[Source documents and extracts]
-    Sources --> UI
-    Client[Connected AI client] <--> MCP[MCP interface]
-    MCP <--> Retrieval
-```
+1. Extract text from documents, using OCR where needed.
+2. Build a semantic and keyword index for search.
+3. Retrieve relevant passages or return matching document lists.
+4. Generate an answer locally when the request calls for a model, and show the source references in chat or on the canvas.
 
-This is a high-level view of the document workflow. The connected client is outside the application's local processing boundary; optional web search is omitted from the diagram.
+The MCP interface exposes search and question-answering tools to a connected AI client, with the data flows described above.
 
 **Main technologies:** Python, FastAPI, ChromaDB, SQLite FTS5, sentence-transformers, Ollama, JavaScript and MCP.
 
